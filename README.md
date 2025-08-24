@@ -271,7 +271,7 @@ This project is licensed under the MIT License.
 ## 👨‍💻 Author
 
 **Rishabh Singh**
-- GitHub: github.com/singhrishabh93
+- GitHub: www.github.com/singhrishabh93
 - Email: singhrishabh1670@gmail.com
 
 ---
