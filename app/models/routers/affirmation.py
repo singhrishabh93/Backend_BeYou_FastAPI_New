@@ -80,3 +80,36 @@ async def create_affirmation(affirmation: AffirmationCreate):
             status_code=500,
             detail="An unexpected error occurred"
         )
+
+@router.delete("/{affirmation_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_affirmation(affirmation_id: str):
+    """Delete an affirmation by ID"""
+    try:
+        # Check if affirmation exists
+        existing_affirmation = await db.affirmations.find_one({"id": affirmation_id})
+        if existing_affirmation is None:
+            raise HTTPException(status_code=404, detail="Affirmation not found")
+        
+        # Delete the affirmation
+        result = await db.affirmations.delete_one({"id": affirmation_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Affirmation not found")
+            
+        return {"message": "Affirmation deleted successfully"}
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except (ConnectionFailure, ServerSelectionTimeoutError) as e:
+        logger.error(f"Database connection error: {str(e)}")
+        raise HTTPException(
+            status_code=503,
+            detail="Database connection error. Please try again later."
+        )
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="An unexpected error occurred"
+        )
